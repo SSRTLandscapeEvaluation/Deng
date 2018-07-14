@@ -29,14 +29,14 @@ fileName="baiduMapPoiLandeating.csv"
 csvFile=open(fileName,'w')
 
 def scrapingData(leftBottom,rightTop,partition,urlRoot,poiName,AK,csvFile):
-    xDis=(rightTop[0]-leftBottom[0])/partition
-    yDis=(rightTop[1]-leftBottom[1])/partition
+    xDis=(rightTop[0]-leftBottom[0])/partition#每部分经纬值
+    yDis=(rightTop[1]-leftBottom[1])/partition#每部分经纬值
     
     writer=csv.writer(csvFile)
     num=0
-    for i in range(partition):
-        for j in range(partition):
-            leftBottomCoordi=[leftBottom[0]+i*xDis,leftBottom[1]+j*yDis]
+    for i in range(partition):#range(partition)=[1,2]，可以看作是行的循环
+        for j in range(partition):#range(partition)=[1,2],循环两次，可以看作是列的循环
+            leftBottomCoordi=[leftBottom[0]+i*xDis,leftBottom[1]+j*yDis]#i*xDis就是(rightTop[0]-leftBottom[0])
             #rightTopCoordi=[rightTop[0]+i*xDis,rightTop[1]+j*yDis]
             rightTopCoordi=[leftBottom[0]+(i+1)*xDis,leftBottom[1]+(j+1)*yDis]
             #print(leftBottomCoordi,rightTopCoordi)
