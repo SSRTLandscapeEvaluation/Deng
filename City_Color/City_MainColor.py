@@ -25,3 +25,16 @@ import json
 以文件夹名为键，值包含文件夹下所有文件名的列表，文件类型自定义
 ***
 '''
+#dirpath="D:\python\Deng\poi_get\charts"
+#fileType=["jpg"]
+#'''
+def filePath(dirpath,fileType):
+    fileInfo={}
+    i=0
+    for dirpath,dirNames,fileNames in os.walk(dirpath):
+        i+=1
+        if fileNames:
+            tempList = [f for f in fileNames if f.split('.')[-1] in fileType]
+            if tempList:
+                fileInfo.setdefault(dirpath,tempList)
+    return fileInfo
