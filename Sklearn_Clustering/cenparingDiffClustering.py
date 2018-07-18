@@ -163,17 +163,3 @@ for i_dataset, (dataset, algo_params) in enumerate(datasets):
         plot_num +=1        
     
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-

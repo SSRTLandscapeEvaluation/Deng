@@ -94,7 +94,7 @@ def cityColorThemes(imgInfo):
         #print(params)
         X, y = dataset#用于机器学习的数据一般包括特征数据和类标，此次实验为无监督分类的聚类，没有类标，并将其在前文中设置为None对象
         #print(X.shape,X)
-        Xstd = StandardScalar().fit_transform(X)
+        Xstd = StandardScaler().fit_transform(X)
         
         two_means = cluster.MiniBatchKMeans(n_clusters=params['n_clusters'])
         
@@ -111,12 +111,41 @@ def cityColorThemes(imgInfo):
         clustering_algorithms=(
                 ('KMeans',km),
                 )
-
-
-
-
-
-
+        for name, algorithm in clustering_algorithms:
+            t0=time.time()
+            with warnings.catch_warning():
+                warnings.filterwarnings(
+                        "ignore",
+                        massage="the number of connected ,spectral embedding"+"may not work as expected",
+                        cateqory = UserWarning)
+                algorithm.fit(X)
+            quantize=np.array(algorithm.cluster_centers_,dtype=np.uint8)
+            themes=np.vstack((themes,quantize))
+            t1=time.time()
+            
+            if hasattr(algorithm,'labels'):
+                y_pred = algorithm.labels_.astype(np.int)
+            else:
+                y_pred = algorithm.prediot(X)
+            
+            pred=np.vstack((pred, y_pred))
+            
+            figWidth = (len(clustering_algorithms)+2)*3
+            plt.subplot(len(datasets), figWidth, plot_num+1)
+            if i_dataset == 0:
+                plt.title(name, size=18)
+            colors = np.array(list(islice(cycle(['#377eb8','#ff7f00','#4daf4a',
+                                             '#f781bf','#a65628','#984ea3',
+                                             '#999999','#e41a1c','#dede00']),int(max(y_pred)+1))))
+            plt.scatter(Xstd[:, 0], Xstd[:, 1], s=10, color=colors[y_pred])
+            plt.xlim(-2.5,2.5)
+            plt.ylim(-2.5,2.5)
+            plt.xticks(())
+            plt.yticks(())
+            plt.text(.99,.01,('%.2fs' % (t1 - t0)).lstrip('0'),
+                 transform=plt.gca().transAxes,size=15,
+                 horizontalalignment ='right')
+            
 
 
 
