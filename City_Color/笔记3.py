@@ -7,7 +7,7 @@ Created on Fri Jul 20 17:54:55 2018
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
-np.set_printoptions(threshold=np.inf)
+#np.set_printoptions(threshold=np.inf)
 from numpy.random import rand
 from scipy import misc
 
@@ -35,8 +35,8 @@ def filePath(dirpath,fileType):
                 fileInfo.setdefault(dirpath,tempList)
     return fileInfo
 '''
-dirpath=r'D:\python\Deng\City_Color\test'
-imgPath=r'D:\python\Deng\City_Color\test\IMG_20160704_200653_01.jpg'
+dirpath=r'J:\Deng\City_Color\test'
+imgPath=r'J:\Deng\City_Color\test\IMG_20160704_200653_01.jpg'
 fileType=['jpg']
 fileInfo=filePath(dirpath,fileType)
 print(fileInfo)
@@ -63,8 +63,8 @@ def getPixData(img):
     pixData=np.reshape(lum_imgSmall,(h*w, d))
     return lum_imgSmall,pixData
 
-dirpath=r'D:\python\Deng\City_Color\test'
-imgPath=r'D:\python\Deng\City_Color\test\IMG_20160704_200653_01.jpg'
+dirpath=r'J:\Deng\City_Color\test'
+#imgPath=r'J:\Deng\City_Color\test\IMG_20160704_200653_01.jpg'
 fileType=['jpg']
 fileInfo=filePath(dirpath,fileType)
 fileInfoKeys=list(fileInfo.keys())
@@ -74,7 +74,8 @@ imgInfo=[(getPixData(img)) for img in imgPathList]
 
 
 #print str(lstm_node_list[-1].param.wi)
-print(len((imgInfo[0])[1]))
+print(len((imgInfo[0])[0]))
+
 
 
 def cityColorThemes(imgInfo):
@@ -84,14 +85,14 @@ def cityColorThemes(imgInfo):
                     'damping': 0.9,
                     'preference': -200,
                     'n_neighbors': 10,
-                    'n_clusters': 7} 
+                    'n_clusters': 15} 
     #定义参数字典
 
 
     datasets=[((i[1],None),{ }) for i in imgInfo]#基于pixData的图像数据，用于聚类计算
 #   imgInfo=[(getPixData(img)) for img in imgPathList]
     imgList=[i[0] for i in imgInfo]#基于lum_imgSmall的数据图像，用于图像显示，imgInfo为图像列表
-#   print(datasets[0])
+    print(imgList)
     #官方聚类案例中对于datasets的配置
     
     
@@ -183,3 +184,6 @@ def cityColorThemes(imgInfo):
             plot_num+=3
     plt.show()
     return themes,pred
+
+
+cityColorThemes(imgInfo)
