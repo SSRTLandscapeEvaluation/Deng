@@ -35,7 +35,7 @@ imgPathList=[os.path.join(fileInfoKeys[0],i) for i in img]
 lum_img=mpimg.imread(imgPathList[0])
 #print(lum_img)
 lum_imgSmall=misc.imresize(lum_img,0.2)
-print(len(lum_imgSmall[0,:]))
+print(lum_imgSmall)
 h,w,d=lum_imgSmall.shape
 print(h,w,d)
 pixData=np.reshape(lum_imgSmall,(h*w, d))
