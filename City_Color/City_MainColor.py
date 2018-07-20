@@ -183,8 +183,8 @@ def cityColorImpression(themes):
     (x,y)=varied
     fig, ax=plt.subplots(figsize=(10,10))
     scale=1000  #设置斑点随机大小
-    print(y)
-    print(themes)
+#    print(y)
+#    print(themes)
     ax.scatter(x[...,0], x[...,1], c=themes/255,s=scale,alpha=0.7, edgecolors='none')
     ax.grid(True)
     plt.show()
@@ -210,7 +210,9 @@ if __name__ == "__main__" :
     filePathKeys=list(fileInfo.keys())
     selection=0
     imgPath=filePathKeys[selection]
-#    print(imgPath)
+    print('\n')
+    print(imgPath)
+    print('\n')
     imgList=fileInfo[filePathKeys[selection]]
     imgPathList=[os.path.join(imgPath,i) for i in imgList]
     imgInfo=[(getPixData(img)) for img in imgPathList]
