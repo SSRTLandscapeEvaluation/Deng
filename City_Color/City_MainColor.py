@@ -183,8 +183,8 @@ def cityColorImpression(themes):
     (x,y)=varied
     fig, ax=plt.subplots(figsize=(10,10))
     scale=1000  #设置斑点随机大小
-    print(y)
-    print(themes)
+#    print(y)
+#    print(themes)
     ax.scatter(x[...,0], x[...,1], c=themes/255,s=scale,alpha=0.7, edgecolors='none')
     ax.grid(True)
     plt.show()
@@ -202,8 +202,8 @@ def savingData(data,savingPath,name):
     jsonFile.close()
 
 if __name__ == "__main__" :
-    savingPath=r"D:\python\Deng\City_Color\test"
-    dirpath=r"D:\python\Deng\City_Color\test"
+    savingPath=r"J:\Deng\City_Color"
+    dirpath=r"J:\Deng\City_Color"
     fileType=["jpg"]
     fileInfo=filePath(dirpath,fileType)
 #    print(fileInfo)
