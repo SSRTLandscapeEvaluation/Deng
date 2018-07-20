@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Jul 17 16:59:16 2018
+Created on Fri Jul 20 17:54:55 2018
 
 @author: Ao
 """
-#print(_doc_)
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
+np.set_printoptions(threshold=np.inf)
 from numpy.random import rand
 from scipy import misc
 
@@ -22,16 +22,8 @@ from itertools import cycle, islice
 import json
 
 
-'''
-***
-part A
-以文件夹名为键，值包含文件夹下所有文件名的列表，文件类型自定义
-***
-'''
 
-#dirpath="D:\python\Deng\poi_get\charts"
-#fileType=[" "]
-#'''
+
 def filePath(dirpath,fileType):
     fileInfo={}
     i=0
@@ -42,14 +34,27 @@ def filePath(dirpath,fileType):
             if tempList:
                 fileInfo.setdefault(dirpath,tempList)
     return fileInfo
-
 '''
-***
-part B
-读取图像rgb数组，并调整图像大小，减少计算时间，调整图像数组为2维，用于下一步的计算
-***
+dirpath=r'D:\python\Deng\City_Color\test'
+imgPath=r'D:\python\Deng\City_Color\test\IMG_20160704_200653_01.jpg'
+fileType=['jpg']
+fileInfo=filePath(dirpath,fileType)
+print(fileInfo)
+fileInfoKeys=list(fileInfo.keys())
+#print(fileInfoKeys)
+img=fileInfo[fileInfoKeys[0]]
+#print(img)
+imgPathList=[os.path.join(fileInfoKeys[0],i) for i in img]
+#print(imgPathList)
+lum_img=mpimg.imread(imgPathList[0])
+#print(lum_img)
+lum_imgSmall=misc.imresize(lum_img,0.2)
+print(len(lum_imgSmall[0,:]))
+h,w,d=lum_imgSmall.shape
+print(h,w,d)
+pixData=np.reshape(lum_imgSmall,(h*w, d))
+#print(pixData[:,0])
 '''
-
 def getPixData(img):
     lum_img=mpimg.imread(img)
 #    print(lum_img)
@@ -58,12 +63,20 @@ def getPixData(img):
     pixData=np.reshape(lum_imgSmall,(h*w, d))
     return lum_imgSmall,pixData
 
-'''
-***
-part C
-聚类的方法提取图像主题色，并打印图像、聚类预测的二位显示和主题色
-***
-'''
+dirpath=r'D:\python\Deng\City_Color\test'
+imgPath=r'D:\python\Deng\City_Color\test\IMG_20160704_200653_01.jpg'
+fileType=['jpg']
+fileInfo=filePath(dirpath,fileType)
+fileInfoKeys=list(fileInfo.keys())
+img=fileInfo[fileInfoKeys[0]]
+imgPathList=[os.path.join(fileInfoKeys[0],i) for i in img]
+imgInfo=[(getPixData(img)) for img in imgPathList]
+
+
+#print str(lstm_node_list[-1].param.wi)
+print(len((imgInfo[0])[1]))
+
+
 def cityColorThemes(imgInfo):
     #设置聚类参数，实验中仅使用了Kmeans算法，其他算法执行尝试
     default_base = {'quantile': .3,
@@ -71,8 +84,12 @@ def cityColorThemes(imgInfo):
                     'damping': 0.9,
                     'preference': -200,
                     'n_neighbors': 10,
-                    'n_clusters': 7}
+                    'n_clusters': 7} 
+    #定义参数字典
+
+
     datasets=[((i[1],None),{ }) for i in imgInfo]#基于pixData的图像数据，用于聚类计算
+#   imgInfo=[(getPixData(img)) for img in imgPathList]
     imgList=[i[0] for i in imgInfo]#基于lum_imgSmall的数据图像，用于图像显示，imgInfo为图像列表
 #   print(datasets[0])
     #官方聚类案例中对于datasets的配置
@@ -166,81 +183,3 @@ def cityColorThemes(imgInfo):
             plot_num+=3
     plt.show()
     return themes,pred
-
-'''
-***
-part D
-显示所有图像主题色
-***
-'''
-def cityColorImpression(themes):
-    n_samples = themes.shape[0]
-#    print(n_samples)
-    random_state = 170
-    #利用scikit的datasets数据集构建有差异话的斑点
-    varied=datasets.make_blobs(n_samples=n_samples, cluster_std=[1.0, 2.5, 0.5],random_state=random_state)
-#    print(varied)
-    (x,y)=varied
-    fig, ax=plt.subplots(figsize=(10,10))
-    scale=1000  #设置斑点随机大小
-#    print(y)
-#    print(themes)
-    ax.scatter(x[...,0], x[...,1], c=themes/255,s=scale,alpha=0.7, edgecolors='none')
-    ax.grid(True)
-    plt.show()
-    
-
-'''
-***
-part E
-保存文件。因为对于大量数据聚类计算花费时间较长，因此建议将数据储存在文件中，以备以后调用。savingData()函数将文件储存为json数据格式
-***
-'''
-def savingData(data,savingPath,name):
-    jsonFile=open(os.path.join(savingPath,str(time.time())+r'_cityColorImpression_%s.json'%name),'w')
-    json.dump(data.tolist(),jsonFile)
-    jsonFile.close()
-
-if __name__ == "__main__" :
-    savingPath=r"J:\Deng\City_Color"
-    dirpath=r"J:\Deng\City_Color"
-    fileType=["jpg"]
-    fileInfo=filePath(dirpath,fileType)
-#    print(fileInfo)
-    filePathKeys=list(fileInfo.keys())
-    selection=0
-    imgPath=filePathKeys[selection]
-    print('\n')
-    print(imgPath)
-    print('\n')
-    imgList=fileInfo[filePathKeys[selection]]
-    imgPathList=[os.path.join(imgPath,i) for i in imgList]
-    imgInfo=[(getPixData(img)) for img in imgPathList]
-#    print(imgPathList)
-#    print(imgInfo[0][1])
-
-    themes,pred=cityColorThemes(imgInfo)
-    cityColorImpression(themes)
-    
-    nameThemes=r'themes'
-    savingData(themes,savingPath,nameThemes)
-    namePred=r'pred'
-    savingData(pred,savingPath,namePred)
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
