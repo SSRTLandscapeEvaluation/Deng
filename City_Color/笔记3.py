@@ -85,7 +85,7 @@ def cityColorThemes(imgInfo):
                     'damping': 0.9,
                     'preference': -200,
                     'n_neighbors': 10,
-                    'n_clusters': 15} 
+                    'n_clusters': 7} 
     #定义参数字典
 
 
@@ -96,8 +96,10 @@ def cityColorThemes(imgInfo):
     #官方聚类案例中对于datasets的配置
     
     
-    themes=np.zeros((default_base['n_clusters'], 3))#建立0占位的数组，用于后面主题数据的追加。n_clusters是提取主题色的色彩聚类数量，此处为7，轴2为3，是RGB的数值
+    themes=np.zeros((default_base['n_clusters'], 3))#建立0占位的数组，用于后面主题数据的追加。n_clusters是提取主题色的色彩聚类数量，此处为7，轴2为3，(7,3)，是RGB的数值
     (img,pix)=imgInfo[0]#可以一次性提取元素索引相同的值，img就是lum_imgSmall，而pix是pixData
+    print(len(img))
+    print(len(pix))
     pixV,pixH=pix.shape
     pred=np.zeros((pixV))
     plt.figure(figsize=(6*3+3, len(imgInfo)*2))#设置图标大小，根据图象的数量来设置高度
