@@ -61,9 +61,9 @@ def getPixData(img):
     lum_imgSmall=misc.imresize(lum_img,0.1)
     h,w,d=lum_imgSmall.shape
     pixData=np.reshape(lum_imgSmall,(h*w, d))
-    return lum_imgSmall,pixData
+    return lum_imgSmall,pixData#lum_imgSmall是缩放后的三维数组，pixData是降维后的数组
 
-dirpath=r'J:\Deng\City_Color\test'
+dirpath=r'D:\python\Deng\City_Color\test'
 #imgPath=r'J:\Deng\City_Color\test\IMG_20160704_200653_01.jpg'
 fileType=['jpg']
 fileInfo=filePath(dirpath,fileType)
@@ -71,10 +71,10 @@ fileInfoKeys=list(fileInfo.keys())
 img=fileInfo[fileInfoKeys[0]]
 imgPathList=[os.path.join(fileInfoKeys[0],i) for i in img]
 imgInfo=[(getPixData(img)) for img in imgPathList]
+#print(imgPathList)
+#
 
-
-#print str(lstm_node_list[-1].param.wi)
-print(len((imgInfo[0])[0]))
+#print((imgInfo[0])[1].shape)
 
 
 
@@ -90,22 +90,28 @@ def cityColorThemes(imgInfo):
 
 
     datasets=[((i[1],None),{ }) for i in imgInfo]#基于pixData的图像数据，用于聚类计算
+    print(datasets)
 #   imgInfo=[(getPixData(img)) for img in imgPathList]
-    imgList=[i[0] for i in imgInfo]#基于lum_imgSmall的数据图像，用于图像显示，imgInfo为图像列表
-    print(imgList)
+    imgList=[i[0] for i in imgInfo]#基于lum_imgSmall的数据图像，用于图像显示，imgInfo为图像列表，
+#    print(imgList)
     #官方聚类案例中对于datasets的配置
     
     
     themes=np.zeros((default_base['n_clusters'], 3))#建立0占位的数组，用于后面主题数据的追加。n_clusters是提取主题色的色彩聚类数量，此处为7，轴2为3，(7,3)，是RGB的数值
-    (img,pix)=imgInfo[0]#可以一次性提取元素索引相同的值，img就是lum_imgSmall，而pix是pixData
-    print(len(img))
-    print(len(pix))
-    pixV,pixH=pix.shape
-    pred=np.zeros((pixV))
+    (img,pix)=imgInfo[0]#可以一次性提取元素索引相同的值，img就是lum_imgSmall，而pix是pixData，lum_imgSmall是缩放后的三维数组，pixData是降维后的数组
+#    print(len(img))
+    print('\n')
+    print(pix.shape)
+    print('\n')
+    pixV,pixH=pix.shape#V是一张图像里的所有像素点个数，H是每个像素对应了R，G，B三种值
+    print(pixV)
+    pred=np.zeros((pixV))#0值占位，
     plt.figure(figsize=(6*3+3, len(imgInfo)*2))#设置图标大小，根据图象的数量来设置高度
     plt.subplots_adjust(left= .02, right=.98, bottom=.001, top=.96, wspace=.3, hspace=.3)
     plot_num=1
     
+    
+    print(enumerate(datasets))
     for i_dataset, (dataset, algo_params) in enumerate(datasets):#循环pixData数据，即将预测的每个图像数据。enumerate()函数将可迭代队象组成一个索引序列，可以同时获取索引和值，其中i_dataset为索引，从0开始
 #        print(i_dataset)
         params=default_base.copy()
@@ -117,7 +123,7 @@ def cityColorThemes(imgInfo):
         Xstd = StandardScaler().fit_transform(X)
       
         '''
-        ***参数设定ST***
+        ***参数设定Start***
         '''
         two_means = cluster.MiniBatchKMeans(n_clusters=params['n_clusters'])
         
