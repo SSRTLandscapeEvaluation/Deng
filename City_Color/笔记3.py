@@ -63,7 +63,7 @@ def getPixData(img):
     pixData=np.reshape(lum_imgSmall,(h*w, d))
     return lum_imgSmall,pixData#lum_imgSmall是缩放后的三维数组，pixData是降维后的数组
 
-dirpath=r'D:\python\Deng\City_Color\test'
+dirpath=r'J:\Deng\City_Color\test'
 #imgPath=r'J:\Deng\City_Color\test\IMG_20160704_200653_01.jpg'
 fileType=['jpg']
 fileInfo=filePath(dirpath,fileType)
