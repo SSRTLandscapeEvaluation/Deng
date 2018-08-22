@@ -42,7 +42,28 @@ flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type
 C 提取分析所需数据，并转换为skleran的bunch存储方式，统一格式，方便读取。注意poi行业分类类标的设置
 '''
 def jsonDataFilter(fileInfo):   #传入数据，面向不同的数据存储方式，需要调整函数内读取的代码
-'''跟随课程自行补全代码'''  
+    rootPath=list(flileInfo.keys())
+#    print(rootPath)
+    dataName=flatten_lst(list(fileInfo.values()))
+#    print(dataName)
+    coodiDic=[]
+    for fName in dataName: #逐一读取jison数据格式文件，并将需要数据储存于列表中，本次实验数据为poi的经纬度信息和一级行业分类名，注意使用了百度坐标系，转换为GS84
+        f=open(os.path.join(rootPath[0],fName))
+        jsonDecodes=json.load(f)
+    coodiDic.append([(coordi['location']['lat'],coordi['location']['lng'],fName[:-5]) for coordi in jsonDecodes ])
+    
+    coodiDic=flatten_lst(coodiDic)
+#    print(coodiDic)
+    data=np.array([(v[0],v[1]) for v in coodiDic])
+    targetNames=np.array([v[2] for v in coodiDic])
+#    print(data)
+#    print(targetName)
+    class_label=LabeEncoder()
+    targetLabel=class_label.fit_transform(targetNames)
+    calss_mapping=[(idx,label) for idx,label in enumerate(class_label.classes_)]#建立一级分类名和整数编码的映射列表
+#    print(class_mapping)
+    dataBunch=base.Bunch(DESCR=r'spatial points datasets of poi',data=data,feature_name=["XCoordinate","yCoordinate"],target=targetLabel,target_names=class_mapping)
+    
     return dataBunch,class_mapping  #返回bunch格式的数据和分类名映射列表
  
 '''
@@ -51,8 +72,20 @@ D DBSCAN基于密度空间的聚类，聚类所有poi特征点
 
 def affinityPropagationForPoints(dataBunch):
     data=dataBunch.data
-    t1=time.time()     
-'''跟随课程自行补全代码'''  
+    t1=time.time()
+    db=cluster.DBSCAN(eps=0.0008,min_samples=3,metric='euclidean')
+    y_db=db.fit_predict(data)
+    t2=time.time()
+    tDiff_af=t2-t1
+    print(tDiff_af)
+    pred=y_db
+    print(pred,len(np.unique(pred)))
+    
+    t3=time.time()
+    plt.close('all')
+    plt.figure(l,figsize=(20,20))
+
+
     plt.clf()
 #    colors=np.array(list(islice(cycle('bgrcmykbgrcmykbgrcmykbgrcmyk'),int(max(pred)+1))))  #此次实验未使用该种获取色彩的方法
     cm=plt.cm.get_cmap('nipy_spectral')  #获取内置色带
@@ -77,7 +110,7 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
     g, p, dof, expctd=totalIndependence #提取卡方值g，p值，自由度dof和与元数据数组同维度的对应理论值。此次实验计算p=0.00120633349692，小于0.05，因此行业分类与聚类簇相关。
     print(g, p, dof)  
  
-    '''poi的空间分布结构。参考官方案例Visualizing the stock market structure：http://scikit-learn.org/stable/auto_examples/applications/plot_stock_market.html#sphx-glr-auto-examples-applications-plot-stock-market-py'''
+'''poi的空间分布结构。参考官方案例Visualizing the stock market structure：http://scikit-learn.org/stable/auto_examples/applications/plot_stock_market.html#sphx-glr-auto-examples-applications-plot-stock-market-py'''
     #A-协方差逆矩阵(精度矩阵)。The matrix inverse of the covariance matrix, often called the precision matrix, is proportional to the partial correlation matrix. It gives the partial independence relationship. In other words, if two features are independent conditionally on the others, the corresponding coefficient in the precision matrix will be zero。来自官网说明摘录
     edge_model=covariance.GraphLassoCV()   #稀疏逆协方差估计器GraphLassoCV()，翻译有待数学专业确认。官网解释：http://scikit-learn.org/stable/modules/covariance.html#sparse-inverse-covariance    
 '''跟随课程自行补全代码'''  
@@ -88,7 +121,7 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
     embedding=node_position_model.fit_transform(X.T).T
     print(embedding.shape)
     
-    '''图表可视化poi空间分布结构'''
+'''图表可视化poi空间分布结构'''
     plt.figure(1, facecolor='w', figsize=(10, 8))
     plt.clf()
     ax=plt.axes([0., 0., 1., 1.]) #可以参考官方示例程序 http://matplotlib.org/examples/pylab_examples/axis_equal_demo.html
@@ -143,7 +176,7 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
     return CTable
  
 if __name__ == "__main__":
-    dirpath=r'D:\MUBENAcademy\pythonSystem\code\poiDataForStructure'
+    dirpath=r'D:\python\Deng\poi_space'
     fileType=["json"] 
     fileInfo=filePath(dirpath,fileType)
 #    print(fileInfo)
