@@ -105,7 +105,18 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
     '''独立性检验'''
     mergingData=np.hstack((pred.reshape(-1,1),dataBunch.target.reshape(-1,1)))  #水平组合聚类预测值和行业分类类标
     targetStack=[]
-'''跟随课程自行补全代码'''  
+    
+    for i in range(len(np.array(class_mapping)[...,0])):
+        targetStack.append(mergingData[mergingData[...,-1]==int(np.array(class_mapping)[...,0][i])])
+    clusterFrequency={}
+    for p in targetStack:
+        clusterFrequency[(p[...,-1][0])]=[(j,np.sum(p[...,0]==int(j))+1) for j in dbLabel if j!=1]
+#    print(clusterFrequency)
+    CTableTarget=list(clusterFrequency.keys())
+    CTableIdx=np.array(list(clusterFrequency.values()))
+    CTable=CTableIdx[...,1]
+    
+
     totalIndependence=chi2_contingency(CTable)  #列联表的独立性检验   
     g, p, dof, expctd=totalIndependence #提取卡方值g，p值，自由度dof和与元数据数组同维度的对应理论值。此次实验计算p=0.00120633349692，小于0.05，因此行业分类与聚类簇相关。
     print(g, p, dof)  
@@ -113,7 +124,17 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
 '''poi的空间分布结构。参考官方案例Visualizing the stock market structure：http://scikit-learn.org/stable/auto_examples/applications/plot_stock_market.html#sphx-glr-auto-examples-applications-plot-stock-market-py'''
     #A-协方差逆矩阵(精度矩阵)。The matrix inverse of the covariance matrix, often called the precision matrix, is proportional to the partial correlation matrix. It gives the partial independence relationship. In other words, if two features are independent conditionally on the others, the corresponding coefficient in the precision matrix will be zero。来自官网说明摘录
     edge_model=covariance.GraphLassoCV()   #稀疏逆协方差估计器GraphLassoCV()，翻译有待数学专业确认。官网解释：http://scikit-learn.org/stable/modules/covariance.html#sparse-inverse-covariance    
-'''跟随课程自行补全代码'''  
+    X=CTable.copy().T
+    print(X,X.shape)
+    X=X/X.std(axis=0)
+    print(X)
+    edge_model.fit(X)
+    print("***********************************************")
+    print(edge_model.covariance_.shape)
+    
+    _, labels=cluster.affinity_propagation(edge_model.covariance_)
+    n_labels=labels.max()
+
     print(labels)
     
     #C-Manifold中的降维方法可以能够处理数据中的非线性结构信息。具体可以查看官网http://scikit-learn.org/stable/modules/manifold.html#locally-linear-embedding。降维的目的是降到2维，作为xy坐标值，在二维图表中绘制为点。
