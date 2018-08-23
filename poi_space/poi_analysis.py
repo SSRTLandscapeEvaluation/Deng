@@ -2,7 +2,7 @@
 """
 Created on Fri Nov 17 13:58:19 2017
  
-@author: RichieBall-caDesign设计(cadesign.cn)
+@author: RichieBall
 """
 print(__doc__)
  
@@ -11,7 +11,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
-#from itertools import cycle,islice
+from itertools import cycle,islice
 import time
  
 from sklearn.preprocessing import LabelEncoder
@@ -42,7 +42,7 @@ flatten_lst=lambda lst: [m for n_lst in lst for m in flatten_lst(n_lst)] if type
 C 提取分析所需数据，并转换为skleran的bunch存储方式，统一格式，方便读取。注意poi行业分类类标的设置
 '''
 def jsonDataFilter(fileInfo):   #传入数据，面向不同的数据存储方式，需要调整函数内读取的代码
-    rootPath=list(flileInfo.keys())
+    rootPath=list(fileInfo.keys())
 #    print(rootPath)
     dataName=flatten_lst(list(fileInfo.values()))
 #    print(dataName)
@@ -58,9 +58,9 @@ def jsonDataFilter(fileInfo):   #传入数据，面向不同的数据存储方�
     targetNames=np.array([v[2] for v in coodiDic])
 #    print(data)
 #    print(targetName)
-    class_label=LabeEncoder()
+    class_label=LabelEncoder()
     targetLabel=class_label.fit_transform(targetNames)
-    calss_mapping=[(idx,label) for idx,label in enumerate(class_label.classes_)]#建立一级分类名和整数编码的映射列表
+    class_mapping=[(idx,label) for idx,label in enumerate(class_label.classes_)]#建立一级分类名和整数编码的映射列表
 #    print(class_mapping)
     dataBunch=base.Bunch(DESCR=r'spatial points datasets of poi',data=data,feature_name=["XCoordinate","yCoordinate"],target=targetLabel,target_names=class_mapping)
     
@@ -83,7 +83,7 @@ def affinityPropagationForPoints(dataBunch):
     
     t3=time.time()
     plt.close('all')
-    plt.figure(l,figsize=(20,20))
+    plt.figure(1,figsize=(20,20))
 
 
     plt.clf()
@@ -119,38 +119,38 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
 
     totalIndependence=chi2_contingency(CTable)  #列联表的独立性检验   
     g, p, dof, expctd=totalIndependence #提取卡方值g，p值，自由度dof和与元数据数组同维度的对应理论值。此次实验计算p=0.00120633349692，小于0.05，因此行业分类与聚类簇相关。
-    print(g, p, dof)  
+#    print(g, p, dof)  
  
-'''poi的空间分布结构。参考官方案例Visualizing the stock market structure：http://scikit-learn.org/stable/auto_examples/applications/plot_stock_market.html#sphx-glr-auto-examples-applications-plot-stock-market-py'''
+    '''poi的空间分布结构。参考官方案例Visualizing the stock market structure：http://scikit-learn.org/stable/auto_examples/applications/plot_stock_market.html#sphx-glr-auto-examples-applications-plot-stock-market-py'''
     #A-协方差逆矩阵(精度矩阵)。The matrix inverse of the covariance matrix, often called the precision matrix, is proportional to the partial correlation matrix. It gives the partial independence relationship. In other words, if two features are independent conditionally on the others, the corresponding coefficient in the precision matrix will be zero。来自官网说明摘录
     edge_model=covariance.GraphLassoCV()   #稀疏逆协方差估计器GraphLassoCV()，翻译有待数学专业确认。官网解释：http://scikit-learn.org/stable/modules/covariance.html#sparse-inverse-covariance    
     X=CTable.copy().T
-    print(X,X.shape)
+#    print(X,X.shape)
     X=X/X.std(axis=0)
-    print(X)
+#    print(X)
     edge_model.fit(X)
-    print("***********************************************")
-    print(edge_model.covariance_.shape)
+#    print("***********************************************")
+#    print(edge_model.covariance_.shape)
     
     _, labels=cluster.affinity_propagation(edge_model.covariance_)
     n_labels=labels.max()
 
-    print(labels)
+#    print(labels)
     
     #C-Manifold中的降维方法可以能够处理数据中的非线性结构信息。具体可以查看官网http://scikit-learn.org/stable/modules/manifold.html#locally-linear-embedding。降维的目的是降到2维，作为xy坐标值，在二维图表中绘制为点。
     node_position_model=manifold.LocallyLinearEmbedding(n_components=2, eigen_solver='dense', n_neighbors=6)
     embedding=node_position_model.fit_transform(X.T).T
-    print(embedding.shape)
+#    print(embedding.shape)
     
-'''图表可视化poi空间分布结构'''
-    plt.figure(1, facecolor='w', figsize=(10, 8))
+    '''图表可视化poi空间分布结构'''
+    plt.figure(1, facecolor ='w', figsize=(10, 8))
     plt.clf()
     ax=plt.axes([0., 0., 1., 1.]) #可以参考官方示例程序 http://matplotlib.org/examples/pylab_examples/axis_equal_demo.html
     plt.axis('off')    
     
     # Display a graph of the partial correlations/偏相关分析:在多要素所构成的系统中，当研究某一个要素对另一个要素的影响或相关程度时，把其他要素的影响视作常数（保持不变），即暂时不考虑其他要素影响，单独研究两个要素之间的相互关系的密切程度，所得数值结果为偏相关系数。在多元相关分析中，简单相关系数可能不能够真实的反映出变量X和Y之间的相关性，因为变量之间的关系很复杂，它们可能受到不止一个变量的影响。这个时候偏相关系数是一个更好的选择。
     partial_correlations=edge_model.precision_.copy()
-    print(partial_correlations.shape)
+#    print(partial_correlations.shape)
     d=1/np.sqrt(np.diag(partial_correlations)) #umpy.diag()返回一个矩阵的对角线元素，计算该元素平方根的倒数。
     partial_correlations*=d
     partial_correlations*=d[:, np.newaxis]
@@ -184,7 +184,7 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
         else:
             horizontalalignment = 'right'
             x = x - .002
-        if this_dy > 0:
+        if this_dy > 0: 
             verticalalignment = 'bottom'
             y = y + .002
         else:
@@ -197,10 +197,10 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
     return CTable
  
 if __name__ == "__main__":
-    dirpath=r'D:\python\Deng\poi_space'
+    dirpath=r'D:\python\Deng\poi_space\jsonFile'
     fileType=["json"] 
     fileInfo=filePath(dirpath,fileType)
-#    print(fileInfo)
+    print(fileInfo)
     dataBunch,class_mapping=jsonDataFilter(fileInfo)
 #    print(dataBunch)
     pred,dbLabel=affinityPropagationForPoints(dataBunch)
