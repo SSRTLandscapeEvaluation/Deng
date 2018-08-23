@@ -43,17 +43,17 @@ C 提取分析所需数据，并转换为skleran的bunch存储方式，统一格
 '''
 def jsonDataFilter(fileInfo):   #传入数据，面向不同的数据存储方式，需要调整函数内读取的代码
     rootPath=list(fileInfo.keys())
-#    print(rootPath)
+    print(rootPath)
     dataName=flatten_lst(list(fileInfo.values()))
-#    print(dataName)
+    print(dataName)
     coodiDic=[]
     for fName in dataName: #逐一读取jison数据格式文件，并将需要数据储存于列表中，本次实验数据为poi的经纬度信息和一级行业分类名，注意使用了百度坐标系，转换为GS84
         f=open(os.path.join(rootPath[0],fName))
         jsonDecodes=json.load(f)
-    coodiDic.append([(coordi['location']['lat'],coordi['location']['lng'],fName[:-5]) for coordi in jsonDecodes ])
+        coodiDic.append([(coordi['location']['lat'],coordi['location']['lng'],fName[:-5]) for coordi in jsonDecodes ])
     
-    coodiDic=flatten_lst(coodiDic)
-#    print(coodiDic)
+        coodiDic=flatten_lst(coodiDic)
+#   print(coodiDic)
     data=np.array([(v[0],v[1]) for v in coodiDic])
     targetNames=np.array([v[2] for v in coodiDic])
 #    print(data)
@@ -77,9 +77,9 @@ def affinityPropagationForPoints(dataBunch):
     y_db=db.fit_predict(data)
     t2=time.time()
     tDiff_af=t2-t1
-    print(tDiff_af)
+#    print(tDiff_af)
     pred=y_db
-    print(pred,len(np.unique(pred)))
+#    print(pred,len(np.unique(pred)))
     
     t3=time.time()
     plt.close('all')
@@ -94,7 +94,7 @@ def affinityPropagationForPoints(dataBunch):
     plt.show()
     t4=time.time()
     tDiff_plt=t4-t3  #计算图表显示时间
-    print(tDiff_plt)
+#    print(tDiff_plt)
     return pred,np.unique(pred)  #返回DBSCAN聚类预测值。和簇类标
  
 '''
@@ -200,7 +200,7 @@ if __name__ == "__main__":
     dirpath=r'D:\python\Deng\poi_space\jsonFile'
     fileType=["json"] 
     fileInfo=filePath(dirpath,fileType)
-    print(fileInfo)
+#    print(fileInfo)
     dataBunch,class_mapping=jsonDataFilter(fileInfo)
 #    print(dataBunch)
     pred,dbLabel=affinityPropagationForPoints(dataBunch)
