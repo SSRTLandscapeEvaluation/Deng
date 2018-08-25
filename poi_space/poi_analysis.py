@@ -71,6 +71,7 @@ D DBSCAN基于密度空间的聚类，聚类所有poi特征点
 '''
 
 def affinityPropagationForPoints(dataBunch):
+    print(dataBunch)
     data=dataBunch.data
     t1=time.time()
     db=cluster.DBSCAN(eps=0.0008,min_samples=3,metric='euclidean')
@@ -79,7 +80,7 @@ def affinityPropagationForPoints(dataBunch):
     tDiff_af=t2-t1
 #    print(tDiff_af)
     pred=y_db
-#    print(pred,len(np.unique(pred)))
+    print(pred)
     
     t3=time.time()
     plt.close('all')
@@ -143,7 +144,7 @@ def contingencyTableChi2andPOISpaceStructure(dataBunch,pred,class_mapping,dbLabe
 #    print(embedding.shape)
     
     '''图表可视化poi空间分布结构'''
-    plt.figure(1, facecolor ='w', figsize=(10, 8))
+    plt.figure(1, facecolor ='w', figsize=(10, 10))
     plt.clf()
     ax=plt.axes([0., 0., 1., 1.]) #可以参考官方示例程序 http://matplotlib.org/examples/pylab_examples/axis_equal_demo.html
     plt.axis('off')    
