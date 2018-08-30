@@ -43,7 +43,7 @@ def filePath(dirpath,fileType):
 '''B显示一个文件夹下所有图片，便于查看。并作为进一步图片处理分析的基础，关注后续相关实验'''
 def imgShow(imgPath,imgList,nrows):    
     ncols=math.ceil(len(imgList)/nrows)
-    fig,axes=plt.subplots(ncols,nrows,sharex=True,sharey=True,figsize=(10,10))   #布局多个子图，每个子图显示一幅图像，size是图形的显示大小
+    fig,axes=plt.subplots(ncols,nrows,sharex=True,sharey=True,figsize=(10,5))   #布局多个子图，每个子图显示一幅图像，size是图形的显示大小
     ax=axes.flatten()  #降至1维，便于循环操作子图
     
 #    print(ax)
@@ -89,7 +89,7 @@ def imageColorPoints(imgPath,imgList,nrows):
 '''建立图像颜色HSV各分量的直方图，分析颜色色彩分布情况'''
 def imageColorHist(imgPath,imgList,nrows):
     ncols=math.ceil(len(imgList)/nrows)#4
-    fig,axes=plt.subplots(ncols,nrows,sharex=True,sharey=True,figsize=(15,20))
+    fig,axes=plt.subplots(ncols,nrows,sharex=True,sharey=True,figsize=(30,10))
     ax=axes.flatten()
 #    print(ax)
     num_bins = 30    #设置直方图的bin参数，及柱数量
@@ -127,7 +127,7 @@ def imageColorHist(imgPath,imgList,nrows):
     plt.show()
 
 if __name__=="__main__":
-    dirpath=r"D:\python\陕北照片"
+    dirpath=r"J:\Deng\City_Color"
     fileType=['jpg']
     fileInfo=filePath(dirpath,fileType)
 #    print(fileInfo)
@@ -139,7 +139,7 @@ if __name__=="__main__":
     imgList=fileInfo[filePathKeys[0]]
 #    print(len(imgList))
     a=10
-    b=10
+    b=5
     nrows=4
     imgShow(imgPath,imgList,nrows)
     imageColorPoints(imgPath,imgList,nrows)

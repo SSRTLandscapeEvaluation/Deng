@@ -254,7 +254,7 @@ if __name__ == "__main__" :
     imgPathList=[os.path.join(imgPath,i) for i in imgList]
     imgInfo=[(getPixData(img)) for img in imgPathList]
 #    print(imgPathList)
-#    print(imgInfo[0][1])
+#    print(imgInfo[0][1]) 
 
     themes,pred=cityColorThemes(imgInfo)
     cityColorImpression(themes)
