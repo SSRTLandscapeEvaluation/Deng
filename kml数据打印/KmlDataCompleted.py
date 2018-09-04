@@ -145,8 +145,8 @@ def researchPath(coordiSub,kmlSub):
 #    print(coordiValues[0][1],coordiValues[0][2])
     ax.annotate('origin',xy=(coordiValues[0][2],coordiValues[0][1]),xycoords='data',xytext=(coordiValues[0][2]+0.015, coordiValues[0][1]-0.006),fontsize=15,arrowprops=dict(facecolor='black',shrink=0.05))
     fig.text(0.50,0.92,'research path',fontsize=10,color='gray',horizontalalignment='center',va='top',alpha=0.5)    
-    fig.set_figheight(50)
-    fig.set_figwidth(50)
+    fig.set_figheight(500)
+    fig.set_figwidth(500)
     plt.show()
 researchPath(coordiSub,kmlSub)
 

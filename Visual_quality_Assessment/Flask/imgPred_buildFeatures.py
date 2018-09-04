@@ -12,8 +12,7 @@ import pickle
 import cv2
 from sklearn.cluster import KMeans
 
-flatten_lam = lambda lst: [m for n_lst in lst for m in flatten_lam(n_lst)] if type(lst) is list else [
-    lst]  # 展平列表的lambda函数
+flatten_lam = lambda lst: [m for n_lst in lst for m in flatten_lam(n_lst)] if type(lst) is list else [lst]  # 展平列表的lambda函数
 
 '''定义类，用于处理Start特征检测相关函数'''
 
@@ -26,7 +25,7 @@ class StarFeatureDetector(object):
         return self.detector.detect(img)  # 对输入图像运行监测器
 
 
-'''提取王爷图像打分储存到服务器SQLite数据库中的数据'''
+'''提取图像打分储存到服务器SQLite数据库中的数据'''
 
 
 def getImgPath():

@@ -53,7 +53,7 @@ part B
 def getPixData(img):
     lum_img=mpimg.imread(img)
 #    print(lum_img)
-    lum_imgSmall=misc.imresize(lum_img,0.1)
+    lum_imgSmall=misc.imresize(lum_img,0.3)
     h,w,d=lum_imgSmall.shape
     pixData=np.reshape(lum_imgSmall,(h*w, d))
     return lum_imgSmall,pixData
@@ -239,30 +239,37 @@ def savingData(data,savingPath,name):
     jsonFile.close()
 
 if __name__ == "__main__" :
-    savingPath=r"J:\Deng\City_Color"
-    dirpath=r"J:\Deng\City_Color"
-    fileType=["jpg"]
-    fileInfo=filePath(dirpath,fileType)
-#    print(fileInfo)
-    filePathKeys=list(fileInfo.keys())
-    selection=0
-    imgPath=filePathKeys[selection]
-    print('\n')
-    print(imgPath)
-    print('\n')
-    imgList=fileInfo[filePathKeys[selection]]
-    imgPathList=[os.path.join(imgPath,i) for i in imgList]
-    imgInfo=[(getPixData(img)) for img in imgPathList]
-#    print(imgPathList)
-#    print(imgInfo[0][1]) 
-
-    themes,pred=cityColorThemes(imgInfo)
-    cityColorImpression(themes)
-    
-    nameThemes=r'themes'
-    savingData(themes,savingPath,nameThemes)
-    namePred=r'pred'
-    savingData(pred,savingPath,namePred)
+#    dirpath1=r"D:\python\rePhotos\CityWall\IN"
+#    dirpath2=r"D:\python\rePhotos\CityWall\OUT"
+    dirpath3=r"D:\python\rePhotos\MuslimStreet" 
+#    dirpathAll=[dirpath1]
+#    dirpathAll=[dirpath2]
+    dirpathAll=[dirpath3]
+    for dirpath in dirpathAll:
+        savingPath=dirpath
+        
+        fileType=["JPG"]
+        fileInfo=filePath(dirpath,fileType)
+#        print(fileInfo)
+        filePathKeys=list(fileInfo.keys())
+        selection=0
+        imgPath=filePathKeys[selection]
+#        print('\n')
+#        print(imgPath)
+#        print('\n')
+        imgList=fileInfo[filePathKeys[selection]]
+        imgPathList=[os.path.join(imgPath,i) for i in imgList]
+        imgInfo=[(getPixData(img)) for img in imgPathList]
+#        print(imgPathList)
+#        print(imgInfo[0][1]) 
+        
+        themes,pred=cityColorThemes(imgInfo)
+        cityColorImpression(themes)
+        
+        nameThemes=r'themes'
+        savingData(themes,savingPath,nameThemes)
+        namePred=r'pred'
+        savingData(pred,savingPath,namePred)
     
     
 

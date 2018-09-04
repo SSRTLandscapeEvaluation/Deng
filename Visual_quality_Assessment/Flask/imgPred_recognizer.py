@@ -56,7 +56,7 @@ class predConfig(object):
     def __init__(self):
         self.model_file=r'clf.pkl'
         self.featK=r'featK.pkl'
-        self.imgPred=r'static/images/imgpred'
+        self.imgPred=r'D:\python\Deng\Visual_quality_Assessment\Flask\static\images\imaged'
         self.fileType = ["jpg","JPG"]
         self.selectNum = 3
         self.scaling_size =200
@@ -66,7 +66,6 @@ class predConfig(object):
         imgFNList = [key+r'/'+fn for key in fileInfo.keys() for fn in fileInfo[key]]
         rndImg=random.sample(imgFNList,random.randint(self.selectNum,len(imgFNList)))
         predInfo={fn:ImageTagExtractor(self.mode_file,self.featK).predict(cv2.imread(fn),self.scaling_size) for fn in rndImg}
-        
         return predInfo
 
 if __name__ == "__main__":

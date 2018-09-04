@@ -1,0 +1,27 @@
+
+{% extends  'base.html' %}
+
+{% block title %}实验{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block main %}
+<div class="jumbotron">
+    <h1>景观评估项目-实验</h1>
+    <p>
+        这是一个本地小组实验，组员：
+        邓傲，黄伟鋆，肖景天，李煜，文师鹏
+        <a href="http://cadesign.cn/">caDesign设计</a>
+
+        本地测试学习阶段，结合python的数据分析（机器学习），
+        是个Flask轻量级Web框架，结合SQLite/MySQL数据
+    </p>
+    <p><a class="btn btn-primary btn-lg" href="{{ url_for('eval') }}" role="button">参与图像打分</a>
+        &nbsp<a class="btn btn-primary btn-lg" href="{{ url_for('results') }}" role="button">查看评估结果</a>
+        &nbsp<a class="btn btn-primary btn-lg" href="{{ url_for('imgprediction') }}" role="button">预测图像分数</a>
+    </p>
+
+</div>
+{% endblock %}

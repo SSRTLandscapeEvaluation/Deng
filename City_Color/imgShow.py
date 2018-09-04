@@ -43,7 +43,7 @@ def filePath(dirpath,fileType):
 '''B显示一个文件夹下所有图片，便于查看。并作为进一步图片处理分析的基础，关注后续相关实验'''
 def imgShow(imgPath,imgList,nrows):    
     ncols=math.ceil(len(imgList)/nrows)
-    fig,axes=plt.subplots(ncols,nrows,sharex=True,sharey=True,figsize=(10,5))   #布局多个子图，每个子图显示一幅图像，size是图形的显示大小
+    fig,axes=plt.subplots(ncols,nrows,sharex=True,sharey=True,figsize=(30,50))   #布局多个子图，每个子图显示一幅图像，size是图形的显示大小
     ax=axes.flatten()  #降至1维，便于循环操作子图
     
 #    print(ax)
@@ -72,7 +72,7 @@ def imageColorPoints(imgPath,imgList,nrows):
         #for i in range(len(imgList)):
         img=os.path.join(imgPath,imgList[i])
         lum_img=mpimg.imread(img)
-        lum_imgSmall=misc.imresize(lum_img,0.01)#调整大小后分辨率为原来的0.01倍
+        lum_imgSmall=misc.imresize(lum_img,0.05)#调整大小后分辨率为原来的0.01倍
 #        print(lum_imgSmall)
 #        print(lum_imgSmall[:,:,0],lum_imgSmall[:,:,1],lum_imgSmall[:,:,2])
         ax.scatter(lum_imgSmall[:,:,0],lum_imgSmall[:,:,1],lum_imgSmall[:,:,2],c=(lum_imgSmall/255).reshape(-1,3),marker='+')
@@ -89,7 +89,7 @@ def imageColorPoints(imgPath,imgList,nrows):
 '''建立图像颜色HSV各分量的直方图，分析颜色色彩分布情况'''
 def imageColorHist(imgPath,imgList,nrows):
     ncols=math.ceil(len(imgList)/nrows)#4
-    fig,axes=plt.subplots(ncols,nrows,sharex=True,sharey=True,figsize=(30,10))
+    fig,axes=plt.subplots(ncols,nrows,sharex=True,sharey=True,figsize=(30,40))
     ax=axes.flatten()
 #    print(ax)
     num_bins = 30    #设置直方图的bin参数，及柱数量
@@ -119,7 +119,7 @@ def imageColorHist(imgPath,imgList,nrows):
     fig.suptitle("images HSVshow",fontsize=14,fontweight='bold',y=1.02)
     
 #    print(lum_imgSmallHSV[...,0].reshape(-1))    
-    totalStat,(totalAXH,totalAXS,totalAXV)=plt.subplots(ncols=3,figsize=(10, 3))
+    totalStat,(totalAXH,totalAXS,totalAXV)=plt.subplots(ncols=3,figsize=(12, 3))
     totalAXH .hist(totalH*360,num_bins,normed=1,facecolor='y')
     totalAXS.hist(totalS*100,num_bins,normed=1,facecolor='k')
     totalAXV.hist(totalV*100,num_bins,normed=1,facecolor='g')
@@ -127,21 +127,27 @@ def imageColorHist(imgPath,imgList,nrows):
     plt.show()
 
 if __name__=="__main__":
-    dirpath=r"J:\Deng\City_Color"
-    fileType=['jpg']
-    fileInfo=filePath(dirpath,fileType)
-#    print(fileInfo)
+    dirpath1=r"D:\python\rePhotos\CityWall\IN"
+    dirpath2=r"D:\python\rePhotos\CityWall\OUT"
+    dirpath3=r"D:\python\rePhotos\MuslimStreet"
+    dirpathAll=[dirpath1,dirpath2,dirpath3]
+    a=30
+    b=30
+    nrows=10
+    for dirpath in dirpathAll:
+        
+        fileType=['JPG']
+        fileInfo=filePath(dirpath,fileType)
+#       print(fileInfo)
     
-    filePathKeys=list(fileInfo.keys())
-    print(filePathKeys)
-    imgPath=filePathKeys[0]
+        filePathKeys=list(fileInfo.keys())
+        print(filePathKeys)
+        imgPath=filePathKeys[0]
     
-    imgList=fileInfo[filePathKeys[0]]
-#    print(len(imgList))
-    a=10
-    b=5
-    nrows=4
-    imgShow(imgPath,imgList,nrows)
-    imageColorPoints(imgPath,imgList,nrows)
-    imageColorHist(imgPath,imgList,nrows)
+        imgList=fileInfo[filePathKeys[0]]
+#        print(len(imgList))
+        
+        imgShow(imgPath,imgList,nrows)
+        imageColorPoints(imgPath,imgList,nrows)
+        imageColorHist(imgPath,imgList,nrows)
  

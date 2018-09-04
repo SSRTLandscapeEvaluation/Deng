@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="PhotoInfo" uuid="732bf84c-9a37-473f-84c0-59d9a32c95c7">
+    <data-source source="LOCAL" name="SQDatabases.db" uuid="3b498200-de9a-40b4-9390-da02a5a0a4e4">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/../Flask\PhotoInfo</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/SQDatabases.db</jdbc-url>
+      <driver-properties>
+        <property name="enable_load_extension" value="true" />
+      </driver-properties>
+    </data-source>
+    <data-source source="LOCAL" name="laeval.db" uuid="02c291ac-1ae0-4814-8883-28dc87c9d775">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/../Flask\laeval.db</jdbc-url>
       <driver-properties>
         <property name="enable_load_extension" value="true" />
       </driver-properties>

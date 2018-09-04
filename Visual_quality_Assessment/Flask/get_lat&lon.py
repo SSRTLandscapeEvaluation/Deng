@@ -58,7 +58,7 @@ def exifread_infos(photo):
         return Lat,Lon
 
 if __name__ == "__main__":
-    dirpath="D:\python\Deng\Visual_quality_Assessment\Flask"
+    dirpath="D:\python\Deng\Visual_quality_Assessment\Flask\static\images\imageA"
     fileType=["jpg","JPG"]
     fileInfo = filePath(dirpath,fileType)
 #    print(type(fileInfo.keys()))
@@ -67,16 +67,18 @@ if __name__ == "__main__":
     imgList=fileInfo[fileInfoKeys[0]]
     imgPathList=[os.path.join(imgPath,i) for i in imgList]
 #    print(imgPathList)
-    csvFile = open('PhotoInfo.csv','w')
-    fileHeader=["Name","Time","Latitude","Longtitude"]
+    csvFile = open('D:\python\Deng\Visual_quality_Assessment\Flask\static\images\imageA\PhotoInfo.csv','w')
+    fileHeader=["imagename","time","long","lat"]
     writer=csv.writer(csvFile)
     writer.writerow(fileHeader)
     for photo in imgPathList:
         print(photo)
-        Lat , Lon = exifread_infos(photo)
+        Lat,Lon = exifread_infos(photo)
         print(Lat,Lon)
-        time=''
-        row = [photo,time,Lat,Lon]
+        time='2017:12:15 12:26:17'
+        photoname=photo.split('\\')
+        #print(photoname)
+        row = [photoname[-1],time,Lon,Lat]
         writer.writerow(row)
         
     csvFile.close()    

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import re
 import numpy as np
  
-dirpath=r"E:\python"
+dirpath=r"D:\python\kmlPhotos"
  
 '''A以文件夹名为键，值为包含该文件夹下所有文件名的列表。文件类型可以自行定义 '''
 fileType=["jpg","png"] 
